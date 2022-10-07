@@ -11,6 +11,8 @@
 
 <br/>
 
+### How to get Access Token ?
+
 First of all, the entry point of OAuth2 Authorization process, images you have a button on your application UI, when user trigger the button, 
 
 - it will be redirect to  BITGIN Domain `GET /oauth/authorize`  with the following parameters
@@ -22,6 +24,8 @@ First of all, the entry point of OAuth2 Authorization process, images you have a
         | code_challenge | the value of code_verifier after sha256 hash. |
         | user_id | represents the id of user who want to login.  |
         | state | An unguessable random string. It is used to protect against cross-site request forgery attacks. |
+
+<br/>
 
 Second, you need to have a GET hook api, that is to say, it’s your `redirect_uri`
 
@@ -66,13 +70,13 @@ Second, you need to have a GET hook api, that is to say, it’s your `redirect_u
         | expires_in | string | represents the time duration of access_token of seconds |
 
         
-- Finally, You need to write response body `“OK” string` if you get the access token successfully.
+- A the end, You need to write response body `OK` string if you get the access token successfully.
 
 <br />
 
 ### How to Refresh Access Token ?
     
-- POST /v1/oauth/token 
+- `POST /v1/oauth/token`
     - Content-Type: x-www-form-urlencoded
     - Request Body
         
