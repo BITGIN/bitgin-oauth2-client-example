@@ -275,7 +275,7 @@ Query deposit history
 
 Request
 
-```GET /v1/oauth/exchange/wallet/history/deposit?currency={currency}&start_time={start_time}&end_time={end_time}```
+```GET /v1/oauth/exchange/wallet/history/deposit?currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
@@ -284,6 +284,8 @@ Parameters
 | currency | string | optional, if the field is empty, it will return all deposit history as default. (e.g. BTC, ETH, USDT, TWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
+| limit| number | represents limit of pagination | 
+| offset | number | represents offset of pagination | 
 
 Response Format
 
@@ -325,7 +327,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents deposit id|
-| [status](#deposit-status-definition) | integer | status of deposit|
+| [status](#deposit-status-definition) | number | status of deposit|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -386,7 +388,7 @@ Query withdrawal history
 
 Request
 
-```GET /v1/oauth/exchange/wallet/withdrawal?currency={currency}&start_time={start_time}&end_time={end_time}```
+```GET /v1/oauth/exchange/wallet/withdrawal?currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
@@ -395,6 +397,8 @@ Parameters
 | currency | string | optional, if the field is empty, it will return all withdrawal history as default. (e.g. BTC, ETH, USDT, TWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
+| limit| number | represents limit of pagination | 
+| offset | number | represents offset of pagination | 
 
 Response Format
 
@@ -436,7 +440,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| [status](#withdrawal-status-definition) | integer | status of withdrawal|
+| [status](#withdrawal-status-definition) | number | status of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -501,7 +505,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| [status](#withdrawal-status-definition) | integer | status of withdrawal|
+| [status](#withdrawal-status-definition) | number | status of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -553,13 +557,13 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| [status](#withdrawal-status-definition) | integer | status of withdrawal|
+| [status](#withdrawal-status-definition) | number | status of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
 | fee | decimal |  |
 | fee_currency | string | BTC, ETH, USDT, TWD  |
-| [type](#withdrawal-type-definition) | integer | type of withdrawal|
+| [type](#withdrawal-type-definition) | number | type of withdrawal|
 | from_address | string |  |
 | to_address | string |  |
 | txid | string | transaction hash |
@@ -575,7 +579,7 @@ Query trade history
 
 Request
 
-```GET /v1/oauth/exchange/trade?market={market}&start_time={start_time}&end_time={end_time}```
+```GET /v1/oauth/exchange/trade?market={market}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
@@ -584,6 +588,8 @@ Parameters
 | market | string | optional, if the field is empty, it will return all trade history as default. (e.g. BTCTWD, ETHTWD, USDTTWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
+| limit| number | represents limit of pagination | 
+| offset | number | represents offset of pagination | 
 
 
 Response Format
