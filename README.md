@@ -2,7 +2,10 @@
 
 BITGIN's OAuth implementation supports the standard [authorization code grant type](https://www.rfc-editor.org/rfc/rfc6749#section-4.1)
 
+> We also supply simple oauth2 client example to help you understand the authorization flow specifically and test easily. 
+
 # Table of contents
+- [Quick Start](#quick-start)
 - [Authentication](#authentication)
   - [How to get access token ?](#how-to-get-access-token)
   - [How to refresh access token ?](#how-to-refresh-access-token)
@@ -27,6 +30,36 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
     - [Withdrawal Status Definition](#withdrawal-status-definition)
     - [Deposit Status Definition](#deposit-status-definition)
     - [Order Side Definition](#order-side-definition)
+
+## Quick Start
+
+- Installation
+    ```
+    $ git clone github.com/bitgin/bitgin-oauth2-client-example
+    ```
+
+- Run executable file (arm64) or you can build executables for different architectures [here](https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04)
+
+    ```
+    $ oa2cli -h
+
+    Usage: oa2cli [options] 
+    Currently, the following flags can be used
+    -e string
+            BITGIN environment mode e.g. stage, prod (default "stage")
+    -i string
+            client id
+    -p string
+            client serve port (default "9094")
+    -s string
+            client secret
+    -u string
+            user id
+    ```
+- example 
+    ```
+    $ oa2cli -i [clientID]  -s [clientSecret] -u [targetUserID]
+    ```
 
 ## Authentication
 
