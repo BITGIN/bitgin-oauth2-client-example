@@ -10,7 +10,7 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
 - [Exchange API](#exchange-api)
   - Account
     - [Get Account](#get-account)
-    - [Get Amount Bank](#get-account-bank)
+    - [Get Account Bank](#get-account-bank)
   - Wallet
     - [Get Balance](#get-balance)
     - [Get Deposit History](#get-deposit-history)
@@ -206,10 +206,10 @@ Response Format
 {
     "success": true,
     "data": {
-        "bank_code": "ad122e63-9112-499e-be60-1997f9455f6b",
-        "branch_code": "bitgin@bitgin.com",
-        "holder": 2,
-        "number": "KLD3DJ"
+        "bank_code": "809",
+        "branch_code": "0094",
+        "holder": "[NAME]",
+        "number": "0060090100005333"
     }
 }
 
@@ -217,10 +217,10 @@ Response Format
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| bank_code | string | ID of account |
-| branch_code | string | Email of account |
-| holder | string | KYC (Know Your Customer) level|
-| number | string | Referrer code (e.g. The referral code that you acquire from other user.)  |
+| bank_code | string | represents code of bank |
+| branch_code | string | represents code of branch |
+| holder | string | represents the holder's name of bank account |
+| number | string | represents the number of bank account  |
 
 
 <br/>
@@ -295,7 +295,7 @@ Response Format
     "data": [
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": 4,
+            "status": "COMPLETED",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "1500",
@@ -308,7 +308,7 @@ Response Format
         },
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": 4,
+            "status": "COMPLETED",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "750",
@@ -327,7 +327,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents deposit id|
-| [status](#deposit-status-definition) | number | status of deposit|
+| [status](#deposit-status-definition) | string | status of deposit|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -408,7 +408,7 @@ Response Format
     "data": [
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": 6,
+            "status": "COMPLETED",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "1500",
@@ -422,7 +422,7 @@ Response Format
         },
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": 1,
+            "status": "PENDING",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "200",
@@ -440,7 +440,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| [status](#withdrawal-status-definition) | number | status of withdrawal|
+| [status](#withdrawal-status-definition) | string | status of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -489,7 +489,7 @@ Response Format
     "success": true,
     "data": {
         "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-        "status": 1,
+        "status": "PENDING",
         "currency": "USDT",
         "chain": "Tron",
         "amount": "1500",
@@ -505,7 +505,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| [status](#withdrawal-status-definition) | number | status of withdrawal|
+| [status](#withdrawal-status-definition) | string | status of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -538,13 +538,13 @@ Response Format
     "success": true,
     "data": {
         "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-        "status": 6,
+        "status": "COMPLETED",
         "currency": "USDT",
         "chain": "Tron",
         "amount": "1500",
         "fee": "0",
         "fee_currency": "USDT",
-        "type": 1,
+        "type": "CRYPTO",
         "from_address": "TTsNwkygXcdCPxb6BZEkjznGPBDLi5A8pZ",
         "to_address": "TXHzvoDBPaG7YbSgb3zdoosJK4x4Kmf2J2",
         "txid": "ba2f799dd1607a0d118dd9320019ea9ca7e42492760e76abbeb27b29f6404cf7",
@@ -557,13 +557,13 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| [status](#withdrawal-status-definition) | number | status of withdrawal|
+| [status](#withdrawal-status-definition) | string | status of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
 | fee | decimal |  |
 | fee_currency | string | BTC, ETH, USDT, TWD  |
-| [type](#withdrawal-type-definition) | number | type of withdrawal|
+| [type](#withdrawal-type-definition) | string | type of withdrawal|
 | from_address | string |  |
 | to_address | string |  |
 | txid | string | transaction hash |
@@ -737,36 +737,32 @@ Response Format
 ### Withdrawal Type Definition
 | Value | Description |
 | :---  | :---     |
-| 1  | crypto withdrawal|
-| 2  | fiat withdrawal |
-| 3  | internal transfer (e.g. from BITGIN address to BITGIN address)|
+| CRYPTO  | crypto withdrawal|
+| FIAT_KGI  | fiat withdrawal |
+| INTERNAL_TRANSFER  | internal transfer (e.g. from BITGIN address to BITGIN address)|
 
 
 ## Withdrawal Status Definition
 
-| value | Description |
+| Value | Description |
 | :---  | :---     |
-| 0  | withdrawal in unknown status  |
-| 1  | withdrawal is waiting to be sent |
-| 2  | withdrawal is waiting for an approval |
-| 3  | withdrawal approved|
-| 4  | withdrawal is in bank procedure |
-| 5  |  withdrawal sent |
-| 6  | withdrawal completed |
-| 7  | withdrawal has been cancelled |
-| 8  |  withdrawal has been rejected |
-| 9  | withdrawal failed |
+| PENDING  | withdrawal is waiting to be sent |
+| WAITING_APPROVAL  | withdrawal is waiting for an approval |
+| APPROVED  | withdrawal approved|
+| BANK_VERIFYING  | withdrawal is in bank procedure |
+| SENT  |  withdrawal sent |
+| COMPLETED  | withdrawal completed |
+| CANCELLED  | withdrawal has been cancelled |
+| REJECTED  |  withdrawal has been rejected |
+| FAILED  | withdrawal failed |
 
 ## Deposit Status Definition
 
 | Value | Description |
 | :---  | :---     |
-| 0  | deposit in unknown status  |
-| 1 | deposit confirmation count on the blockchain |
-| 2 | deposit status in block list ignore |
-| 3 | deposit status in AML screen ignore |
-| 4  | deposit completed |
-| 5  | deposit has been rejected |
+| WAITING_CONFIRMATION	 | deposit confirmation count on the blockchain |
+| COMPLETED  | deposit completed |
+| REJECTED  | deposit has been rejected |
 
 ## Order Side Definition
 
