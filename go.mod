@@ -3,12 +3,12 @@ module github.com/bitgin/bitgin-oauth2-client-example
 go 1.18
 
 require (
+	github.com/bndr/gotabulate v1.1.2
 	github.com/labstack/echo/v4 v4.9.0
 	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1
 )
 
 require (
-	github.com/bndr/gotabulate v1.1.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect

@@ -76,6 +76,11 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
 
 First of all, the entry point of OAuth2 Authorization process, images you have a button on your application UI, when user trigger the button, it will be redirect to  BITGIN Domain `GET /oauth/authorize`  with the following parameters
 
+**Header**
+| Key | Value |
+| --- | --- |
+| Content-Type | application/json |
+
 **Parameters**
         
 | Field | Description |
@@ -121,9 +126,43 @@ You will receive the callback
 
 <br/>
 
+You need to write response body 
+
+1. if you ```success``` to receive callback
+    
+    **Response Header**
+    | Key | Value |
+    | --- | --- |
+    | Content-Type | application/json |
+
+    **Response Body**
+    | Field | Type | Description |
+    | --- | --- | --- |
+    | success | boolean | ```true``` |
+    
+
+2. if you ```fail``` to receive callback
+
+    **Response Header**
+    | Key | Value |
+    | --- | --- |
+    | Content-Type | application/json |
+
+    **Response Body**
+    | Field | Type | Description |
+    | --- | --- | --- |
+    | success | boolean | ```false``` |
+    | message | string, optional | error message |
+
+<br />
+
 Then, you can receive authorization code from `redirect_uri`, and use the `code` to exchange the `access_token` by call  OAuth Server `POST /v1/oauth/token`
     
-**Content-Type: x-www-form-urlencoded**
+**Header**
+| Key | Value |
+| --- | --- |
+| Content-Type | x-www-form-urlencoded |
+
 
 **Request Body**
             
@@ -147,15 +186,14 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 
 <br/>
 
-At the end, You need to write response body `OK` string if you get the access token successfully.
-
-<br />
-
 ### How to refresh access token ?
     
 `POST /v1/oauth/token`
 
-**Content-Type: x-www-form-urlencoded**
+**Header**
+| Key | Value |
+| --- | --- |
+| Content-Type | x-www-form-urlencoded |
 
 **Request Body**
         
@@ -328,7 +366,7 @@ Response Format
     "data": [
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": "COMPLETED",
+            "status": "completed",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "1500",
@@ -341,7 +379,7 @@ Response Format
         },
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": "COMPLETED",
+            "status": "completed",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "750",
@@ -441,7 +479,7 @@ Response Format
     "data": [
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": "COMPLETED",
+            "status": "completed",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "1500",
@@ -455,7 +493,7 @@ Response Format
         },
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-            "status": "PENDING",
+            "status": "pending",
             "currency": "USDT",
             "chain": "Tron",
             "amount": "200",
@@ -496,6 +534,11 @@ Request
 
 ```POST /v1/oauth/exchange/wallet/withdrawal```
 
+Header
+| Key | Value |
+| --- | --- |
+| Content-Type | application/json |
+
 Post Body
 
 ```json
@@ -522,7 +565,7 @@ Response Format
     "success": true,
     "data": {
         "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-        "status": "PENDING",
+        "status": "pending",
         "currency": "USDT",
         "chain": "Tron",
         "amount": "1500",
@@ -556,6 +599,11 @@ Confirm the withdrawal with 2FA code
 Request 
 ```POST  /v1/oauth/exchange/wallet/withdrawal/confirm```
 
+Header
+| Key | Value |
+| --- | --- |
+| Content-Type | application/json |
+
 Post Body
 ```json
 {
@@ -571,13 +619,13 @@ Response Format
     "success": true,
     "data": {
         "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-        "status": "COMPLETED",
+        "status": "completed",
         "currency": "USDT",
         "chain": "Tron",
         "amount": "1500",
         "fee": "0",
         "fee_currency": "USDT",
-        "type": "CRYPTO",
+        "type": "crypto",
         "from_address": "TTsNwkygXcdCPxb6BZEkjznGPBDLi5A8pZ",
         "to_address": "TXHzvoDBPaG7YbSgb3zdoosJK4x4Kmf2J2",
         "txid": "ba2f799dd1607a0d118dd9320019ea9ca7e42492760e76abbeb27b29f6404cf7",
@@ -651,7 +699,7 @@ Response Format
 | :---  | :---  | :---        |
 | id | string | trade id |
 | market | string  | BTCTWD, ETHTWD, USDTTWD |
-| [side](#order-side-definition) | string  | order side (e.g. BUY, SELL) |
+| [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | price | decimal | price of the transaction|
 | size | decimal | total amount of the transaction|
 | fee | decimal | fee per transaction|
@@ -671,12 +719,17 @@ Request
 
 ```POST /v1/oauth/exchange/trade/quote```
 
+Header
+| Key | Value |
+| --- | --- |
+| Content-Type | application/json |
+
 Post Body
 
 ```json
 {
     "market": "USDTTWD",
-    "side": "BUY",
+    "side": "buy",
     "base_amount": "1000",
 }
 ```
@@ -684,7 +737,7 @@ Post Body
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | market | string | BTCTWD, ETHTWD, USDTTWD|
-| [side](#order-side-definition) | string  | order side (e.g. BUY, SELL) |
+| [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | base_amount | decimal | total amount you want to buy/sell (e.g. USDT, ETH, BTC)|
 | quote_amount | decimal | total amount you want to buy/sell (e.g. TWD)|
 
@@ -700,7 +753,7 @@ Response Format
     "data": {
         "id": "ad122e63-9112-499e-be60-1997f9455f6b",
         "market": "USDTTWD",
-        "side": "BUY",
+        "side": "buy",
         "price": "29.03",
         "base_amount": "1000",
         "quote_amount": "29030",
@@ -717,7 +770,7 @@ Response Format
 | :---  | :---  | :---        |
 | id | string | quotation id |
 | market | string  | BTCTWD, ETHTWD, USDTTWD |
-| [side](#order-side-definition) | string  | order side (e.g. BUY, SELL) |
+| [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | price | decimal | current price |
 | base_amount | decimal | total amount you want to buy/sell (e.g. USDT, ETH, BTC) |
 | quote_amount | decimal | total amount you want to buy/sell (e.g. TWD) |
@@ -741,6 +794,11 @@ Accept quote of trade
 Request
 
 ```POST /v1/oauth/exchange/trade/quote/accept```
+
+Header
+| Key | Value |
+| --- | --- |
+| Content-Type | application/json |
 
 Post Body
 
@@ -770,36 +828,36 @@ Response Format
 ### Withdrawal Type Definition
 | Value | Description |
 | :---  | :---     |
-| CRYPTO  | crypto withdrawal|
-| FIAT_KGI  | fiat withdrawal |
-| INTERNAL_TRANSFER  | internal transfer (e.g. from BITGIN address to BITGIN address)|
+| crypto  | crypto withdrawal|
+| fiat_kgi  | fiat withdrawal |
+| internal_transfer  | internal transfer (e.g. from BITGIN address to BITGIN address)|
 
 
 ## Withdrawal Status Definition
 
 | Value | Description |
 | :---  | :---     |
-| PENDING  | withdrawal is waiting to be sent |
-| WAITING_APPROVAL  | withdrawal is waiting for an approval |
-| APPROVED  | withdrawal approved|
-| BANK_VERIFYING  | withdrawal is in bank procedure |
-| SENT  |  withdrawal sent |
-| COMPLETED  | withdrawal completed |
-| CANCELLED  | withdrawal has been cancelled |
-| REJECTED  |  withdrawal has been rejected |
-| FAILED  | withdrawal failed |
+| pending  | withdrawal is waiting to be sent |
+| waiting_approval  | withdrawal is waiting for an approval |
+| approved  | withdrawal approved|
+| bank_verifying  | withdrawal is in bank procedure |
+| sent  |  withdrawal sent |
+| completed  | withdrawal completed |
+| cancelled  | withdrawal has been cancelled |
+| rejected  |  withdrawal has been rejected |
+| failed  | withdrawal failed |
 
 ## Deposit Status Definition
 
 | Value | Description |
 | :---  | :---     |
-| WAITING_CONFIRMATION	 | deposit confirmation count on the blockchain |
-| COMPLETED  | deposit completed |
-| REJECTED  | deposit has been rejected |
+| waiting_confirmation	 | deposit confirmation count on the blockchain |
+| completed  | deposit completed |
+| rejected  | deposit has been rejected |
 
 ## Order Side Definition
 
 | Value | Description |
 | :---  | :---     |
-| BUY  | order side buy |
-| SELL  | order side sell |
+| buy  | order side buy |
+| sell  | order side sell |

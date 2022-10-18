@@ -19,12 +19,15 @@ import (
 )
 
 var (
-	clientID      string
-	clientSecret  string
-	userID        string
-	port          string
-	env           string
-	authServerURL string
+	clientID       string
+	clientSecret   string
+	userID         string
+	port           string
+	env            string
+	authServerURL  string
+	tokenServerURL string
+	sourceSeverURL string
+	expectedState  string
 )
 
 func init() {
@@ -57,12 +60,17 @@ func init() {
 
 	switch env {
 	case "stage":
-		authServerURL = "https://oauth.bitgin.app"
+		authServerURL = "https://stage.bitgin.app"
+		tokenServerURL = "https://oauth.bitgin.app"
 	case "prod":
-		authServerURL = "https://oauth.bitgin.net"
+		authServerURL = "https://bitgin.net"
+		tokenServerURL = "https://oauth.bitgin.net"
 	default:
 		panic("unknown environment")
 	}
+
+	sourceSeverURL = tokenServerURL
+	expectedState = "xyz"
 }
 
 func usage() {
@@ -82,7 +90,7 @@ func main() {
 		ClientSecret: clientSecret,
 		Endpoint: oauth2.Endpoint{
 			AuthURL:   authServerURL + "/v1/oauth/authorize",
-			TokenURL:  authServerURL + "/v1/oauth/token",
+			TokenURL:  tokenServerURL + "/v1/oauth/token",
 			AuthStyle: oauth2.AuthStyleInParams,
 		},
 	}
@@ -90,7 +98,7 @@ func main() {
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
-		u := config.AuthCodeURL("xyz",
+		u := config.AuthCodeURL(expectedState,
 			oauth2.SetAuthURLParam("code_challenge", genCodeChallengeS256("s256example")),
 			oauth2.SetAuthURLParam("user_id", userID),
 		)
@@ -101,20 +109,25 @@ func main() {
 
 	e.GET("/oauth", func(c echo.Context) error {
 
+		if err := c.Request().ParseForm(); err != nil {
+			http.Error(c.Response().Writer, "Parse Form Failed", http.StatusInternalServerError)
+			return nil
+		}
+
 		state := c.Request().Form.Get("state")
-		if state != "xyz" {
-			http.Error(c.Response().Writer, "State invalid", http.StatusBadRequest)
+		if state != expectedState {
+			response(false, c.Response().Writer, http.StatusBadRequest, "invalid state")
 			return nil
 		}
 		code := c.Request().Form.Get("code")
 		if code == "" {
-			http.Error(c.Response().Writer, "Code not found", http.StatusBadRequest)
+			response(false, c.Response().Writer, http.StatusBadRequest, "invalid code")
 			return nil
 		}
 
 		token, err := config.Exchange(context.Background(), code, oauth2.SetAuthURLParam("code_verifier", "s256example"))
 		if err != nil {
-			http.Error(c.Response().Writer, err.Error(), http.StatusInternalServerError)
+			response(false, c.Response().Writer, http.StatusInternalServerError, "exchange token failed")
 			return nil
 		}
 
@@ -122,8 +135,7 @@ func main() {
 
 		prettyPrintToken(globalToken)
 
-		c.Response().Write([]byte("OK"))
-
+		response(true, c.Response().Writer, http.StatusOK)
 		return nil
 	})
 
@@ -163,7 +175,7 @@ func main() {
 			http.Redirect(w, r, "/", http.StatusFound)
 			return nil
 		}
-		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/v1/oauth/exchange/account", authServerURL), nil)
+		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/v1/oauth/exchange/account", sourceSeverURL), nil)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return nil
@@ -204,4 +216,25 @@ func prettyPrintToken(token *oauth2.Token) {
 
 	// Render
 	fmt.Println(tabulate.Render("simple"))
+}
+
+type tokenResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message,omitempty"`
+}
+
+func response(success bool, w http.ResponseWriter, code int, message ...string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+
+	res := tokenResponse{
+		Success: success,
+	}
+
+	if len(message) > 0 {
+		res.Message = message[0]
+	}
+
+	data, _ := json.Marshal(res)
+	w.Write(data)
 }
