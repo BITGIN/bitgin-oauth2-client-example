@@ -2,6 +2,10 @@
 
 BITGIN's OAuth implementation supports the standard [authorization code grant type](https://www.rfc-editor.org/rfc/rfc6749#section-4.1)
 
+- [What is OAuth 2.0 ?](https://itnext.io/an-oauth-2-0-introduction-for-beginners-6e386b19f7a9)
+- [The library we use](https://github.com/go-oauth2/oauth2)
+
+
 > We also supply simple oauth2 client example to help you understand the authorization flow specifically and test easily. 
 
 # Table of contents
@@ -18,6 +22,7 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
     - [Get Balance](#get-balance)
     - [Get Deposit History](#get-deposit-history)
     - [Get Deposit Address](#get-deposit-address)
+    - [Get Deposit Bank](#get-deposit-bank)
     - [Get Withdrawal History](#get-withdrawal-history)
     - [Request Withdrawal](#request-withdrawal)
     - [Confirm Withdrawal](#confirm-withdrawal)
@@ -62,15 +67,6 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
     ```
 
 ## Authentication
-
-**Request With Header**
-
-| Key | Value |
-| --- | --- |
-| Authorization | Bearer [Access Token] | 
-
-
-<br/>
 
 ### How to get access token ?
 
@@ -219,7 +215,17 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 
 # Exchange API
 
-## Standard Response Format
+**Request Header**
+
+| Key | Value |
+| --- | --- |
+| Authorization | Bearer [Access Token] | 
+| Content-Type | application/json |
+
+
+<br/>
+
+**Standard Response Format**
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -277,9 +283,11 @@ Response Format
 {
     "success": true,
     "data": {
-        "bank_code": "809",
-        "branch_code": "0094",
-        "holder": "[NAME]",
+        "bank_code": "004",
+        "bank_name": "臺灣銀行",
+        "branch_code": "0071",
+        "branch_name":"館前分行",
+        "holder": "測先生",
         "number": "0060090100005333"
     }
 }
@@ -289,7 +297,9 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | bank_code | string | represents code of bank |
+| bank_name | string | represents name of bank |
 | branch_code | string | represents code of branch |
+| branch_name | string | represents name of branch |
 | holder | string | represents the holder's name of bank account |
 | number | string | represents the number of bank account  |
 
@@ -452,6 +462,43 @@ Response Format
 | address | string |  |
 
 </br>
+
+## Get Deposit Bank 
+
+Query the deposit bank 
+
+Request
+
+```GET /v1/oauth/exchange/wallet/deposit_bank```
+
+Response Format
+
+```json
+{
+    "success": true,
+    "data": {
+        "bank_code": "802",
+        "bank_name": "凱基商業銀行",
+        "branch_code": "0072",
+        "branch_name":"城東分行",
+        "holder": "凱基商業銀行受託信託財產專戶",
+        "number": "51730000007724"
+    }
+}
+
+```
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| bank_code | string | represents code of bank |
+| bank_name | string | represents name of bank |
+| branch_code | string | represents code of branch |
+| branch_name | string | represents name of branch |
+| holder | string | represents the holder's name of bank account |
+| number | string | represents the number of virtual account  |
+
+
+<br/>
 
 ### Get Withdrawal History
 
