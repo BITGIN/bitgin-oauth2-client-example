@@ -464,14 +464,13 @@ Query deposit addresses of account
 
 Request
 
-```GET /v1/oauth/exchange/wallet/deposit_address?currency={currency}&chain={chain}```
+```GET /v1/oauth/exchange/wallet/deposit_address?currency={currency}```
 
 Parameters
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | currency | string | BTC, ETH, USDT|
-| chain | string | optional (e.g. Bitcoin, Ethereum, Tron)|
 
 <br />
 
