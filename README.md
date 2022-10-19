@@ -18,11 +18,11 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
   - Account
     - [Get Account](#get-account)
     - [Get Account Bank](#get-account-bank)
+    - [Get Account Fiat Deposit](#get-account-fiat-deposit)
   - Wallet
     - [Get Balance](#get-balance)
     - [Get Deposit History](#get-deposit-history)
     - [Get Deposit Address](#get-deposit-address)
-    - [Get Deposit Bank](#get-deposit-bank)
     - [Get Withdrawal History](#get-withdrawal-history)
     - [Request Withdrawal](#request-withdrawal)
     - [Confirm Withdrawal](#confirm-withdrawal)
@@ -306,6 +306,43 @@ Response Format
 
 <br/>
 
+## Get Account Fiat Deposit 
+
+Query the fiat deposit bank 
+
+Request
+
+```GET /v1/oauth/exchange/account/fiat_deposit```
+
+Response Format
+
+```json
+{
+    "success": true,
+    "data": {
+        "bank_code": "802",
+        "bank_name": "凱基商業銀行",
+        "branch_code": "0072",
+        "branch_name":"城東分行",
+        "holder": "凱基商業銀行受託信託財產專戶",
+        "number": "51730000007724"
+    }
+}
+
+```
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| bank_code | string | represents code of bank |
+| bank_name | string | represents name of bank |
+| branch_code | string | represents code of branch |
+| branch_name | string | represents name of branch |
+| holder | string | represents the holder's name of bank account |
+| number | string | represents the number of virtual account  |
+
+
+<br/>
+
 
 ## Get Balance
 
@@ -463,42 +500,6 @@ Response Format
 
 </br>
 
-## Get Deposit Bank 
-
-Query the deposit bank 
-
-Request
-
-```GET /v1/oauth/exchange/wallet/deposit_bank```
-
-Response Format
-
-```json
-{
-    "success": true,
-    "data": {
-        "bank_code": "802",
-        "bank_name": "凱基商業銀行",
-        "branch_code": "0072",
-        "branch_name":"城東分行",
-        "holder": "凱基商業銀行受託信託財產專戶",
-        "number": "51730000007724"
-    }
-}
-
-```
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| bank_code | string | represents code of bank |
-| bank_name | string | represents name of bank |
-| branch_code | string | represents code of branch |
-| branch_name | string | represents name of branch |
-| holder | string | represents the holder's name of bank account |
-| number | string | represents the number of virtual account  |
-
-
-<br/>
 
 ### Get Withdrawal History
 
