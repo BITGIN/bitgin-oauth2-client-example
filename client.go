@@ -28,6 +28,7 @@ var (
 	tokenServerURL string
 	sourceSeverURL string
 	expectedState  string
+	codeVerifier   string
 )
 
 func init() {
@@ -71,6 +72,7 @@ func init() {
 
 	sourceSeverURL = tokenServerURL
 	expectedState = "xyz"
+	codeVerifier = "s256example"
 }
 
 func usage() {
@@ -99,7 +101,7 @@ func main() {
 
 	e.GET("/", func(c echo.Context) error {
 		u := config.AuthCodeURL(expectedState,
-			oauth2.SetAuthURLParam("code_challenge", genCodeChallengeS256("s256example")),
+			oauth2.SetAuthURLParam("code_challenge", genCodeChallengeS256(codeVerifier)),
 			oauth2.SetAuthURLParam("user_id", userID),
 		)
 		http.Redirect(c.Response().Writer, c.Request(), u, http.StatusFound)
@@ -125,7 +127,7 @@ func main() {
 			return nil
 		}
 
-		token, err := config.Exchange(context.Background(), code, oauth2.SetAuthURLParam("code_verifier", "s256example"))
+		token, err := config.Exchange(context.Background(), code, oauth2.SetAuthURLParam("code_verifier", codeVerifier))
 		if err != nil {
 			response(false, c.Response().Writer, http.StatusInternalServerError, "exchange token failed")
 			return nil
@@ -133,7 +135,7 @@ func main() {
 
 		globalToken = token
 
-		prettyPrintToken(globalToken)
+		prettyPrintToken()
 
 		response(true, c.Response().Writer, http.StatusOK)
 		return nil
@@ -158,7 +160,7 @@ func main() {
 
 		globalToken = token
 
-		prettyPrintToken(globalToken)
+		prettyPrintToken()
 
 		e := json.NewEncoder(w)
 		e.SetIndent("", "  ")
@@ -203,7 +205,7 @@ func genCodeChallengeS256(s string) string {
 	return base64.URLEncoding.EncodeToString(s256[:])
 }
 
-func prettyPrintToken(token *oauth2.Token) {
+func prettyPrintToken() {
 
 	// Some Strings
 	string_1 := []string{globalToken.AccessToken, globalToken.RefreshToken, globalToken.Expiry.String(), globalToken.TokenType}
