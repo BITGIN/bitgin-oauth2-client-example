@@ -26,6 +26,7 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
     - [Get Withdrawal History](#get-withdrawal-history)
     - [Request Withdrawal](#request-withdrawal)
     - [Confirm Withdrawal](#confirm-withdrawal)
+    - [Request Fiat Withdrawal](#request-fiat-withdrawal)
   - Trade
     - [Get Trade History](#get-trade-history)
     - [Get Quote](#get-quote)
@@ -175,9 +176,9 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
             
 | Field | type |Description |
 | --- | --- | --- |
-| access_token | string| represents the token you can use to access resources of user |
+| access_token | string| represents the token you can use to access resources of user, expired in 1 hour |
 | token_type | string| represents access_token type (e.g. Bearer) |
-| refresh_token | string | represents the token you can use to refresh access_token |
+| refresh_token | string | represents the token you can use to refresh access_token, expired in 90 days |
 | expires_in | string | represents the time duration of access_token of seconds |
 
 <br/>
@@ -251,10 +252,25 @@ Response Format
 {
     "success": true,
     "data": {
-        "id": "ad122e63-9112-499e-be60-1997f9455f6b",
-        "email": "bitgin@bitgin.com",
-        "phone": "0912345678",
-        "kyc_level": 2
+        "email": "usr****@domain.com",
+        "phone": "+88627****776",
+        "referral_code": "Qr11N6k2Mr",
+        "kyc_level": 1,
+        "kyc_status": "verified",
+        "name": "王**明",
+        "gender": "male",
+        "birthday": 1506441600000,
+        "id_type": "arc",
+        "nationality": "US",
+        "id_number": "553102****",
+        "issuance_date": 1664776467170,
+        "issuance_type": null,
+        "issuance_location": null,
+        "barcode_number": "123456****",
+        "expiration_date": 1664867363326,
+        "bank_code": "809",
+        "branch_code": "0094",
+        "account": "0060091694735777"
     }
 }
 
@@ -262,10 +278,25 @@ Response Format
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| id | string | ID of account |
-| email | string | Email of account |
-| phone | string | Phone number of account |
-| kyc_level | number | KYC (Know Your Customer) level|
+| email | string | user's email |
+| phone | string | user's phone |
+| referral_code | string | user's referral code |
+| kyc_level | number | user's [kyc level](#kyc-level) |
+| kyc_status | string | user's current [kyc status](#kyc-status), indicating lv1 status if `kyc_level` = 0 or lv2 status if `kyc_level` = 1 | 
+| name | string | user's name | 
+| gender | string | [gender](#gender-category) | 
+| birthday | number | Unix time of current time, the number of milliseconds elapsed since January 1, 1970 UTC | 
+| id_type | string | [id type](#id-type) | true |
+| nationality | string | user's nationality, should follow [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) | 
+| id_number | string | Taiwan ID number or ARC ID |
+| issuance_date | number | Unix time of current time, the number of milliseconds elapsed since January 1, 1970 UTC |
+| issuance_type | string | [identity issue type](#identity-issuance-type), null if [id type](#id-type) is `arc` |
+| issuance_location | string | Taiwan identity card issuance location, null if [id type](#id-type) is `arc` |
+| barcode_number | string | barcode of ARC, null if [id type](#id-type) is `id_card` | 
+| expiration_date | number | Unix time of current time, the number of milliseconds elapsed since January 1, 1970 UTC, null if [id type](#id-type) is `id_card` | 
+| bank_code | string | user's submitted bank code |
+| branch_code | string | user's submitted bank branch code | 
+| account | string | user's bank account |
 
 <br/>
 
@@ -393,12 +424,13 @@ Query deposit history
 
 Request
 
-```GET /v1/oauth/exchange/wallet/history/deposit?currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
+```GET /v1/oauth/exchange/wallet/history/deposit?id={id}&currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
+| id | string | represents deposit id |
 | currency | string | optional, if the field is empty, it will return all deposit history as default. (e.g. BTC, ETH, USDT, TWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
@@ -506,12 +538,13 @@ Query withdrawal history
 
 Request
 
-```GET /v1/oauth/exchange/wallet/withdrawal?currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
+```GET /v1/oauth/exchange/wallet/withdrawal?id={id}&currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
+| id | string | represents withdrawal id |
 | currency | string | optional, if the field is empty, it will return all withdrawal history as default. (e.g. BTC, ETH, USDT, TWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
@@ -611,16 +644,19 @@ Response Format
 {
     "success": true,
     "data": {
-        "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
+        "id": "901c6edc-0c2e-4f5a-857d-c7ffb4efcaa0",
+        "user_id": "351c0599-17b9-44ad-b10e-29f93b52863e",
+        "created_at": 1668436093256,
+        "updated_at": 1668436093288,
         "status": "pending",
+        "completed_at": null,
+        "type": "crypto",
+        "amount": "100",
+        "fee": "0.5",
         "currency": "USDT",
-        "chain": "Tron",
-        "amount": "1500",
-        "fee": "0",
         "fee_currency": "USDT",
-        "to_address": "TXHzvoDBPaG7YbSgb3zdoosJK4x4Kmf2J2",
-        "created_at": 1615974333,
-        "updated_at": 1615974333,
+        "chain": "Tron",
+        "to_address": "TSNpBZhQsGdVoGYB3yhzFA8wimzMtuG2s9"
     }
 }
 ```
@@ -628,7 +664,9 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
+| user_id | string| represents user id|
 | [status](#withdrawal-status-definition) | string | status of withdrawal|
+| [type](#withdrawal-type-definition) | string | type of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
@@ -637,6 +675,7 @@ Response Format
 | to_address | string | |
 | created_at | number | when the withdrawal was created, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | updated_at | number | when the withdrawal was updated, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
+| completed_at | number | when the withdrawal was completed, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 <br/>
 
 ## Confirm Withdrawal
@@ -665,39 +704,98 @@ Response Format
 {
     "success": true,
     "data": {
-        "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
-        "status": "completed",
-        "currency": "USDT",
-        "chain": "Tron",
-        "amount": "1500",
-        "fee": "0",
-        "fee_currency": "USDT",
+        "id": "901c6edc-0c2e-4f5a-857d-c7ffb4efcaa0",
+        "user_id": "351c0599-17b9-44ad-b10e-29f93b52863e",
+        "created_at": 1668436093256,
+        "updated_at": 1668436117019,
+        "status": "sent",
+        "completed_at": null,
         "type": "crypto",
-        "from_address": "TTsNwkygXcdCPxb6BZEkjznGPBDLi5A8pZ",
-        "to_address": "TXHzvoDBPaG7YbSgb3zdoosJK4x4Kmf2J2",
-        "txid": "ba2f799dd1607a0d118dd9320019ea9ca7e42492760e76abbeb27b29f6404cf7",
-        "created_at": 1615974333,
-        "updated_at": 1615974333,
-        "completed_at": 1615975346,
+        "amount": "100",
+        "fee": "0.5",
+        "currency": "USDT",
+        "fee_currency": "USDT",
+        "chain": "Tron",
+        "to_address": "TSNpBZhQsGdVoGYB3yhzFA8wimzMtuG2s9"
     }
 }
 ```
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
+| user_id | string| represents user id|
 | [status](#withdrawal-status-definition) | string | status of withdrawal|
+| [type](#withdrawal-type-definition) | string | type of withdrawal|
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
 | fee | decimal |  |
 | fee_currency | string | BTC, ETH, USDT, TWD  |
-| [type](#withdrawal-type-definition) | string | type of withdrawal|
-| from_address | string |  |
-| to_address | string |  |
-| txid | string | transaction hash |
+| to_address | string | |
 | created_at | number | when the withdrawal was created, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | updated_at | number | when the withdrawal was updated, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
-| completed_at | number | only exists when the withdrawal was completed, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
+| completed_at | number | when the withdrawal was completed, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
+
+<br/>
+
+## Request Fiat Withdrawal
+
+Send the request of withdrawal
+
+Request
+
+```POST /v1/oauth/exchange/wallet/withdrawal/fiat```
+
+Header
+| Key | Value |
+| --- | --- |
+| Content-Type | application/json |
+
+Post Body
+
+```json
+{
+	"amount": "100",
+}
+```
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| amount | decimal |  withdrawal TWD amount |
+
+Response Format
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": "be0278f0-5516-41ff-b25e-63353a0763d1",
+        "user_id": "351c0599-17b9-44ad-b10e-29f93b52863e",
+        "created_at": 1668489917031,
+        "updated_at": 1668489917076,
+        "status": "waiting_approval",
+        "completed_at": null,
+        "type": "fiat_kgi",
+        "amount": "100",
+        "fee": "0",
+        "currency": "TWD",
+        "fee_currency": "TWD"
+    }
+}
+```
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| id | string | represents withdrawal id |
+| user_id | string| represents user id|
+| [status](#withdrawal-status-definition) | string | status of withdrawal|
+| [type](#withdrawal-type-definition) | string | type of withdrawal|
+| currency | string | BTC, ETH, USDT, TWD |
+| amount | decimal | total amount |
+| fee | decimal |  |
+| fee_currency | string | BTC, ETH, USDT, TWD  |
+| created_at | number | when the withdrawal was created, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
+| updated_at | number | when the withdrawal was updated, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
+| completed_at | number | when the withdrawal was completed, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 
 <br/>
 
@@ -707,12 +805,13 @@ Query trade history
 
 Request
 
-```GET /v1/oauth/exchange/trade?market={market}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
+```GET /v1/oauth/exchange/trade?id={id}&market={market}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
+| id | string | represents trade id |
 | market | string | optional, if the field is empty, it will return all trade history as default. (e.g. BTCTWD, ETHTWD, USDTTWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
@@ -869,9 +968,38 @@ Response Format
 
 ```json
 {
-    "success": true
+    "success": true,
+    "data": [
+        {
+            "id": "b3422e63-9112-499e-be60-1997f9455f6b",
+            "market": "USDTTWD",
+            "side": "buy",
+            "price": "29.03",
+            "size": "1000",
+            "fee": "0",
+            "fee_rate": "0",
+            "fee_currency": "USDT",
+            "time": 1615975346
+        }
+    ]
 }
+
 ```
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| id | string | trade id |
+| market | string  | BTCTWD, ETHTWD, USDTTWD |
+| [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
+| price | decimal | price of the transaction|
+| size | decimal | total amount of the transaction|
+| fee | decimal | fee per transaction|
+| fee_rate | decimal | |
+| fee_currency | string | Bitcoin, Ethereum, Tron, TWD |
+| time | number | when the transaction was completed, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
+
+<br/>
+
 ### Withdrawal Type Definition
 | Value | Description |
 | :---  | :---     |
@@ -908,3 +1036,30 @@ Response Format
 | :---  | :---     |
 | buy  | order side buy |
 | sell  | order side sell |
+
+## Gender Category
+| Value | Description |
+| :---  | :---     |
+| male |  |
+| female |  |
+
+## ID Type 
+| Value | Description |
+| :---  | :---     |
+| id_card | Taiwan Identity Card |
+| arc | ARC |
+
+## KYC Level 
+| Value | Description |
+| :---  | :---     |
+| 0 | no kyc passed | 
+| 1 | kyc lv1 passed | 
+| 2 | kyc lv2 passed | 
+
+## KYC Status 
+| Value | Description |
+| :---  | :---     |
+| not_submitted | kyc is not submitted | 
+| verifying | kyc is verifying | 
+| verified | kyc is verified | 
+| rejected | kyc is rejected | 
