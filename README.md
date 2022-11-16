@@ -221,8 +221,6 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 | Key | Value |
 | --- | --- |
 | Authorization | Bearer [Access Token] | 
-| Content-Type | application/json |
-
 
 <br/>
 
@@ -332,7 +330,7 @@ Response Format
 | branch_code | string | represents code of branch |
 | branch_name | string | represents name of branch |
 | holder | string | represents the holder's name of bank account |
-| number | string | represents the number of bank account  |
+| number | string | represents the number of bank account |
 
 
 <br/>
@@ -676,11 +674,12 @@ Response Format
 | created_at | number | when the withdrawal was created, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | updated_at | number | when the withdrawal was updated, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | completed_at | number | when the withdrawal was completed, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
+
 <br/>
 
 ## Confirm Withdrawal
 
-Confirm the withdrawal with 2FA code
+Confirm the withdrawal with OTP code
 
 Request 
 ```POST  /v1/oauth/exchange/wallet/withdrawal/confirm```
@@ -697,6 +696,10 @@ Post Body
     "code": "123456"
 }
 ```
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| id | string | represents withdrawal id |
+| code | string| phone OTP code for verification|
 
 Response Format
 
@@ -740,7 +743,7 @@ Response Format
 
 ## Request Fiat Withdrawal
 
-Send the request of withdrawal
+Send the request of fiat withdrawal
 
 Request
 
@@ -812,7 +815,7 @@ Parameters
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents trade id |
-| market | string | optional, if the field is empty, it will return all trade history as default. (e.g. BTCTWD, ETHTWD, USDTTWD)|
+| [market](#market-definition)  | string | optional, if the field is empty, it will return all trade history as default. (e.g. BTCTWD, ETHTWD, USDTTWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | limit| number | represents limit of pagination | 
@@ -844,7 +847,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | trade id |
-| market | string  | BTCTWD, ETHTWD, USDTTWD |
+| [market](#market-definition)  | string  | trading pair |
 | [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | price | decimal | price of the transaction|
 | size | decimal | total amount of the transaction|
@@ -882,7 +885,7 @@ Post Body
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| market | string | BTCTWD, ETHTWD, USDTTWD|
+| [market](#market-definition)  | string | trading pair |
 | [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | base_amount | decimal | total amount you want to buy/sell (e.g. USDT, ETH, BTC)|
 | quote_amount | decimal | total amount you want to buy/sell (e.g. TWD)|
@@ -915,7 +918,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | quotation id |
-| market | string  | BTCTWD, ETHTWD, USDTTWD |
+| [market](#market-definition)  | string  | trading pair |
 | [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | price | decimal | current price |
 | base_amount | decimal | total amount you want to buy/sell (e.g. USDT, ETH, BTC) |
@@ -989,7 +992,7 @@ Response Format
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | trade id |
-| market | string  | BTCTWD, ETHTWD, USDTTWD |
+| [market](#market-definition)  | string  | trading pair |
 | [side](#order-side-definition) | string  | order side (e.g. buy, sell) |
 | price | decimal | price of the transaction|
 | size | decimal | total amount of the transaction|
@@ -1036,6 +1039,13 @@ Response Format
 | :---  | :---     |
 | buy  | order side buy |
 | sell  | order side sell |
+
+## Market Definition
+| Value | Description |
+| :---  | :---     |
+| USDTTWD  | base: USDT, quote TWD |
+| ETHTWD  | base: ETH, quote TWD |
+| BTCTWD  | base: BTC, quote TWD |
 
 ## Gender Category
 | Value | Description |
