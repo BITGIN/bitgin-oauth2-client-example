@@ -429,7 +429,7 @@ Parameters
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents deposit id |
-| currency | string | optional, if the field is empty, it will return all deposit history as default. (e.g. BTC, ETH, USDT, TWD)|
+| currency | string | represents deposit currency (e.g. BTC, ETH, USDT, TWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | limit| number | represents limit of pagination | 
@@ -543,7 +543,7 @@ Parameters
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents withdrawal id |
-| currency | string | optional, if the field is empty, it will return all withdrawal history as default. (e.g. BTC, ETH, USDT, TWD)|
+| currency | string | represents withdrawal currency (e.g. BTC, ETH, USDT, TWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | limit| number | represents limit of pagination | 
@@ -815,7 +815,7 @@ Parameters
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | id | string | represents trade id |
-| [market](#market-definition)  | string | optional, if the field is empty, it will return all trade history as default. (e.g. BTCTWD, ETHTWD, USDTTWD)|
+| [market](#market-definition)  | string | represents trade market (e.g. BTCTWD, ETHTWD, USDTTWD)|
 | start_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | end_time | number | Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC |
 | limit| number | represents limit of pagination | 
