@@ -91,7 +91,7 @@ func main() {
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Endpoint: oauth2.Endpoint{
-			AuthURL:   authServerURL + "/v1/oauth/authorize",
+			AuthURL:   authServerURL + "/oauth/authorize",
 			TokenURL:  tokenServerURL + "/v1/oauth/token",
 			AuthStyle: oauth2.AuthStyleInParams,
 		},
