@@ -71,7 +71,7 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
 
 ### How to get access token ?
 
-First of all, the entry point of OAuth2 Authorization process, images you have a button on your application UI, when user trigger the button, it will be redirect to  BITGIN Domain `GET /v1/oauth/authorize`  with the following parameters
+First of all, the entry point of OAuth2 Authorization process, images you have a button on your application UI, when user trigger the button, it will be redirect to  BITGIN Frontend Domain (https://bitgin.net) `GET /oauth/authorize`  with the following parameters
 
 **Header**
 | Key | Value |
@@ -153,7 +153,7 @@ You need to write response body
 
 <br />
 
-Then, you can receive authorization code from `redirect_uri`, and use the `code` to exchange the `access_token` by call  OAuth Server `POST /v1/oauth/token`
+Then, you can receive authorization code from `redirect_uri`, and use the `code` to exchange the `access_token` by call OAuth Server (https://oauth.bitgin.net) `POST /v1/oauth/token`
     
 **Header**
 | Key | Value |
