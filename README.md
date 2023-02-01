@@ -69,7 +69,7 @@ BITGIN's OAuth implementation supports the standard [authorization code grant ty
 
 ## Authentication
 
-### How to get access token ?
+### How to get access token
 
 First of all, the entry point of OAuth2 Authorization process, images you have a button on your application UI, when user trigger the button, it will be redirect to  BITGIN Frontend Domain (https://bitgin.net) `GET /oauth/authorize`  with the following parameters
 
@@ -84,7 +84,7 @@ First of all, the entry point of OAuth2 Authorization process, images you have a
 | --- | --- |
 | client_id | represents your client id. |
 | code_challenge | the value of code_verifier after sha256 hash. |
-| user_id | represents the id of user who want to login.  |
+| user_id | optional, represents the id of user who want to login. if user_id is empty, user will have an additional step of login before authorizing|
 | state | An unguessable random string. It is used to protect against cross-site request forgery attacks. |
 
 > How to do code challenge ?
@@ -108,18 +108,12 @@ Second, you need to have a GET hook api, that is to say, it’s your `redirect_u
 
 You will receive the callback
     
-**Callback Body**
+**Callback Params**
 
 | Field | type | Description |
 | --- | --- | --- |
-| client_id | string| represents your client id. |
-| response_type | string | represents the response type (e.g. code) |
-| code_challenge | string | the value of code_verifier after sha256 hash. |
-| code_challenge_method | string |  |
-| user_id | string| represents the id of user who want to login.  |
-| state | string|  An unguessable random string. It is used to protect against cross-site request forgery attacks. |
 | code | string | the authentication code allow you to do exchange for token |
-| redirect_uri | string | represents the callback endpoint |
+| state | string|  An unguessable random string. It is used to protect against cross-site request forgery attacks. |
 
 <br/>
 
@@ -183,7 +177,7 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 
 <br/>
 
-### How to refresh access token ?
+### How to refresh access token
     
 `POST /v1/oauth/token`
 

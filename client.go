@@ -37,7 +37,7 @@ func init() {
 
 	flag.StringVar(&clientSecret, "s", "", "client secret")
 
-	flag.StringVar(&userID, "u", "", "user id")
+	flag.StringVar(&userID, "u", "", "optional, user id")
 
 	flag.StringVar(&port, "p", "9094", "client serve port")
 
@@ -53,10 +53,6 @@ func init() {
 
 	if len(clientSecret) == 0 {
 		panic("client secret is empty")
-	}
-
-	if len(userID) == 0 {
-		panic("user id is empty")
 	}
 
 	switch env {
@@ -91,7 +87,7 @@ func main() {
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Endpoint: oauth2.Endpoint{
-			AuthURL:   authServerURL + "/oauth/authorize",
+			AuthURL:   authServerURL + "/v1/oauth/authorize",
 			TokenURL:  tokenServerURL + "/v1/oauth/token",
 			AuthStyle: oauth2.AuthStyleInParams,
 		},
@@ -100,10 +96,17 @@ func main() {
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
-		u := config.AuthCodeURL(expectedState,
+
+		options := []oauth2.AuthCodeOption{
 			oauth2.SetAuthURLParam("code_challenge", genCodeChallengeS256(codeVerifier)),
-			oauth2.SetAuthURLParam("user_id", userID),
-		)
+		}
+
+		if len(userID) != 0 {
+			options = append(options, oauth2.SetAuthURLParam("user_id", userID))
+		}
+
+		u := config.AuthCodeURL(expectedState, options...)
+
 		http.Redirect(c.Response().Writer, c.Request(), u, http.StatusFound)
 
 		return nil
