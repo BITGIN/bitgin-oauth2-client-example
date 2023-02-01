@@ -179,6 +179,8 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 
 ### How to refresh access token
     
+OAuth Server (https://oauth.bitgin.net)
+
 `POST /v1/oauth/token`
 
 **Header**
@@ -209,6 +211,11 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 <br/>
 
 # Exchange API
+
+**Endpoint**
+
+OAuth Server (https://oauth.bitgin.net)
+
 
 **Request Header**
 
