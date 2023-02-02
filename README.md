@@ -117,36 +117,6 @@ You will receive the callback
 
 <br/>
 
-You need to write response body 
-
-1. if you ```success``` to receive callback
-    
-    **Response Header**
-    | Key | Value |
-    | --- | --- |
-    | Content-Type | application/json |
-
-    **Response Body**
-    | Field | Type | Description |
-    | --- | --- | --- |
-    | success | boolean | ```true``` |
-    
-
-2. if you ```fail``` to receive callback
-
-    **Response Header**
-    | Key | Value |
-    | --- | --- |
-    | Content-Type | application/json |
-
-    **Response Body**
-    | Field | Type | Description |
-    | --- | --- | --- |
-    | success | boolean | ```false``` |
-    | message | string, optional | error message |
-
-<br />
-
 Then, you can receive authorization code from `redirect_uri`, and use the `code` to exchange the `access_token` by call OAuth Server (https://oauth.bitgin.net) `POST /v1/oauth/token`
     
 **Header**
@@ -176,6 +146,36 @@ Then, you can receive authorization code from `redirect_uri`, and use the `code`
 | expires_in | string | represents the time duration of access_token of seconds |
 
 <br/>
+
+Finally, You need to write response body 
+
+1. if you ```success``` to receive access token
+    
+    **Response Header**
+    | Key | Value |
+    | --- | --- |
+    | Content-Type | application/json |
+
+    **Response Body**
+    | Field | Type | Description |
+    | --- | --- | --- |
+    | success | boolean | ```true``` |
+    
+
+2. if you ```fail``` to receive access token
+
+    **Response Header**
+    | Key | Value |
+    | --- | --- |
+    | Content-Type | application/json |
+
+    **Response Body**
+    | Field | Type | Description |
+    | --- | --- | --- |
+    | success | boolean | ```false``` |
+    | message | string, optional | error message |
+
+<br />
 
 ### How to refresh access token
     
