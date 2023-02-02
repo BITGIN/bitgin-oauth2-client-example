@@ -380,7 +380,7 @@ Query balances of account
 
 Request
 
-```GET /v1/oauth/exchange/wallet/balance?currency={currency}```
+```GET /v1/oauth/exchange/wallet/balances?currency={currency}```
 
 Parameters
 
@@ -423,7 +423,7 @@ Query deposit history
 
 Request
 
-```GET /v1/oauth/exchange/wallet/history/deposit?id={id}&currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
+```GET /v1/oauth/exchange/wallet/deposit?id={id}&currency={currency}&start_time={start_time}&end_time={end_time}&limit={limit}&offset={offset}```
 
 Parameters 
 
