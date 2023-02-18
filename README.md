@@ -448,8 +448,6 @@ Response Format
             "currency": "USDT",
             "chain": "Tron",
             "amount": "1500",
-            "fee": "0",
-            "fee_currency": "USDT",
             "txid": "ba2f799dd1607a0d118dd9320019ea9ca7e42492760e76abbeb27b29f6404cf7",
             "created_at": 1615974333,
             "updated_at": 1615974333,
@@ -458,12 +456,9 @@ Response Format
         {
             "id": "c82b7de8-c654-4d9e-b84e-022b52c189bb",
             "status": "completed",
-            "currency": "USDT",
-            "chain": "Tron",
+            "currency": "TWD",
+            "chain": null,
             "amount": "750",
-            "fee": "0",
-            "fee_currency": "USDT",
-            "txid": "aa2f799dd1607a0d118dd9320019ea9ca7e42492760e76abbeb27b29f6404ch35",
             "created_at": 1615974333,
             "updated_at": 1615974333,
             "completed_at": 1615975346
@@ -480,8 +475,6 @@ Response Format
 | currency | string | BTC, ETH, USDT, TWD |
 | chain | string | Bitcoin, Ethereum, Tron |
 | amount | decimal | total amount |
-| fee | decimal |  |
-| fee_currency | string | BTC, ETH, USDT, TWD  |
 | txid | string | transaction hash |
 | created_at | number | when the deposit was created, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
 | updated_at | number | when the deposit was updated, Unix time of current time, the number of `milliseconds` elapsed since January 1, 1970 UTC|
